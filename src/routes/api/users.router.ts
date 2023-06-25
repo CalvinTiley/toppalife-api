@@ -3,4 +3,4 @@ import { usersController } from "../../controllers";
 
 export const usersRouter = express.Router();
 
-usersRouter.post("/", usersController.POST);
+usersRouter.post("/register", usersController.Register);

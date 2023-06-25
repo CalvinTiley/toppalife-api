@@ -10,28 +10,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  @@map(name: "users")
-
-  id String  @id @default(uuid())
-  name String  @db.VarChar(255)
-  email String
-  photo String? @default("default.png")
-  verified Boolean? @default(false)
+model User {
+  id       String   @id @default(uuid())
+  name     String   @db.VarChar(255)
+  email    String
+  photo    String?  @default("default.png")
 
   password String
-  role RoleEnumType? @default(user)
 
-  verificationCode String? @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  RefreshToken RefreshToken[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([email, verificationCode])
-  @@index([email, verificationCode])
+  @@unique([email])
+  @@index([email])
+  @@map(name: "users")
 }
 
-enum RoleEnumType {
-  user
-  admin
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  userId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

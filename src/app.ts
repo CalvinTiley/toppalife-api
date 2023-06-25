@@ -1,15 +1,14 @@
 require("dotenv").config();
 import express from "express";
 import config from "config";
-import { PrismaClient } from "@prisma/client";
 import validateEnv from "./utils/validateEnv";
 import { apiRouter } from "./routes/api";
 import { serverLogger } from "./utils/logger";
 import { serverMiddleware } from "./middleware";
+import { db } from "./utils/db";
 
 validateEnv();
 
-const prisma = new PrismaClient();
 const app = express();
 
 async function main() {
@@ -34,5 +33,5 @@ main()
         throw err;
     })
     .finally(async () => {
-        await prisma.$disconnect();
+        await db.$disconnect();
     });
