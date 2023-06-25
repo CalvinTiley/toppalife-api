@@ -5,7 +5,7 @@ import validateEnv from "./utils/validateEnv";
 import { PrismaClient } from "@prisma/client";
 import { apiRouter } from "./routes/api";
 import { serverLogger } from "./utils/logger";
-import { serverMiddleware } from "./routes/middleware/server.middleware";
+import { serverMiddleware } from "./middleware";
 
 validateEnv();
 
