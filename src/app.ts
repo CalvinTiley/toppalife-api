@@ -1,8 +1,8 @@
 require("dotenv").config();
 import express from "express";
 import config from "config";
-import validateEnv from "./utils/validateEnv";
 import { PrismaClient } from "@prisma/client";
+import validateEnv from "./utils/validateEnv";
 import { apiRouter } from "./routes/api";
 import { serverLogger } from "./utils/logger";
 import { serverMiddleware } from "./middleware";
