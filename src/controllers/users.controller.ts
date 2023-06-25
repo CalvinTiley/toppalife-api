@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { usersSchemas } from "../schemas";
 import { User, UserRegistrationResponseData } from "../types/User";
 import { encryptPassword } from "../utils/encrypt";
-import { userService } from "../services";
+import { authService, userService } from "../services";
+import { signJwt } from "../utils/jwt";
 
 export const Register = async (request: Request, response: Response) => {
-    const { body: data } = request;
-
-    const validatedData = usersSchemas.register.validate(data);
+    const validatedData = usersSchemas.register.validate(request.body);
 
     if (validatedData.error) {
         response.status(400).json({
@@ -17,16 +16,29 @@ export const Register = async (request: Request, response: Response) => {
         return;
     }
 
-    const dataToSend: UserRegistrationResponseData = {
-        email: data.email,
-        name: data.name,
-        password: await encryptPassword(data.password),
+    const userData: UserRegistrationResponseData = {
+        email: request.body.email.toLowerCase(),
+        name: request.body.name,
+        password: await encryptPassword(request.body.password),
     };
 
     try {
-        const newUser: User = await userService.createUser(dataToSend);
+        const user: User = await userService.createUser(userData);
 
-        response.status(201).json(newUser);
+        const accessToken = signJwt(user, "jwtSecret");
+        const refreshToken = signJwt(user, "jwtRefreshSecret", { expiresIn: 30 });
+
+        authService.createRefreshToken(refreshToken, user);
+
+        const responseData = {
+            email: user.email,
+            name: user.name,
+            photo: user.photo,
+            access_token: accessToken,
+            refresh_token: refreshToken,
+        };
+
+        response.status(201).json(responseData);
     } catch (error) {
         response.status(500).json({
             errors: [{

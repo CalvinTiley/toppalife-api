@@ -1,12 +1,13 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import config from "config";
 
+const accessTokenLife = 600;
+const refreshTokenLife = 21600;
+
 export const signJwt = (
     payload: Object,
     keyName: "jwtSecret" | "jwtRefreshSecret",
-    options: SignOptions = {
-        expiresIn: 10,
-    },
+    options?: SignOptions,
 ) => {
     const privateKey = Buffer.from(
         config.get<string>(keyName),
@@ -14,14 +15,15 @@ export const signJwt = (
     ).toString("ascii");
 
     return jwt.sign(payload, privateKey, {
-        ...(options && options),
         algorithm: "HS256",
+        expiresIn: keyName === "jwtSecret" ? accessTokenLife : refreshTokenLife,
+        ...(options && options),
     });
 };
 
 export const verifyJwt = <T>(
     token: string,
-    keyName: "jwtSecret" | "jwtRefreshSecret"
+    keyName: "jwtSecret" | "jwtRefreshSecret",
 ): T | null => {
     try {
         const publicKey = Buffer.from(

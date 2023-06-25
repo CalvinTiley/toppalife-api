@@ -1,7 +1,9 @@
 export interface UserRegistrationResponseData {
+    access_token?: string;
     email: string;
     name: string;
     password: string;
+    refresh_token?: string;
 }
 
 export interface User {
