@@ -22,7 +22,7 @@ To generate the `DATABASE_URL` variable, run `npx prisma init --datasource-provi
 
 Once this is done, spin up the Postgres and Redis databases by running `docker compose up -d`. We should now be able to connect to our database.
 
-If using VSCode, you could use the [MySql](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-mysql-client2) extension, select Postgres, add the information from your .env file to the relevant fields and click "Connect".
+If using VSCode, you could use the [MySql](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-mysql-client2) extension, select Postgres, add the information from your .env file to the relevant fields and click "Connect" to test the database connection and view data.
 
 To create the database tables, run `npx prisma db push`.
 
