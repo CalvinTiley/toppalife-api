@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { comparePasswords } from "../utils/encrypt";
 import { authService, userService } from "../services";
-import { usersSchemas } from "../schemas";
+import { authSchemas } from "../schemas";
 import { signJwt, verifyJwt } from "../utils/jwt";
 import { findUser } from "../services/user.service";
 import { User } from "../types/User";
 import { serverLogger } from "../utils/logger";
 
 export const Login = async (request: Request, response: Response) => {
-    const validatedData = usersSchemas.login.validate(request.body);
+    const validatedData = authSchemas.login.validate(request.body);
 
     if (validatedData.error) {
         return response.status(400).json({
@@ -47,9 +47,11 @@ export const Login = async (request: Request, response: Response) => {
 };
 
 export const RefreshAccessToken = async (request: Request, response: Response) => {
-    if (!request.body.refresh_token) {
+    const validatedData = authSchemas.refresh.validate(request.body);
+
+    if (validatedData.error) {
         return response.status(400).json({
-            message: "No refresh token was sent in the request.",
+            errors: validatedData.error.details,
         });
     }
 
@@ -79,9 +81,11 @@ export const RefreshAccessToken = async (request: Request, response: Response) =
 };
 
 export const ValidateAccessToken = async (request: Request, response: Response) => {
-    if (!request.body.access_token) {
+    const validatedData = authSchemas.validate.validate(request.body);
+
+    if (validatedData.error) {
         return response.status(400).json({
-            message: "No access token was sent in the request.",
+            errors: validatedData.error.details,
         });
     }
 
