@@ -21,9 +21,7 @@ export const Login = async (request: Request, response: Response) => {
 
         if (!comparePasswords(request.body.password, user.password)) {
             return response.status(400).json({
-                errors: [{
-                    messages: "Invalid email or password.",
-                }],
+                error: "Invalid email or password.",
             });
         }
 
@@ -39,9 +37,7 @@ export const Login = async (request: Request, response: Response) => {
         });
     } catch (error) {
         return response.status(400).json({
-            errors: [{
-                messages: "There was an issue logging in.",
-            }],
+            error: "Invalid email or password.",
         });
     }
 };
