@@ -34,6 +34,8 @@ export const Login = async (request: Request, response: Response) => {
         return response.status(200).json({
             access_token: accessToken,
             refresh_token: refreshToken,
+            name: user.name,
+            email: user.email,
         });
     } catch (error) {
         return response.status(400).json({

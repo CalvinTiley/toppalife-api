@@ -33,7 +33,6 @@ export const Register = async (request: Request, response: Response) => {
         const responseData = {
             email: user.email,
             name: user.name,
-            photo: user.photo,
             access_token: accessToken,
             refresh_token: refreshToken,
         };
@@ -42,7 +41,7 @@ export const Register = async (request: Request, response: Response) => {
     } catch (error) {
         response.status(500).json({
             errors: [{
-                message: "An error occurred on the server",
+                message: "An error occurred on the server.",
             }],
         });
     }
