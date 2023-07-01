@@ -65,7 +65,7 @@ export const RefreshAccessToken = async (request: Request, response: Response) =
         const user = await findUser({ id: decodedRefreshToken.id });
         const accessToken = signJwt(user, "jwtSecret");
 
-        return response.status(200).json({ accessToken });
+        return response.status(200).json({ access_token: accessToken });
     } catch (error) {
         serverLogger.log({
             message: `Error refreshing token: ${error}`,
